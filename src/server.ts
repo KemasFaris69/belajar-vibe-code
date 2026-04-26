@@ -1,57 +1,45 @@
 import "dotenv/config";
-import { Elysia } from "elysia";
+import { Elysia, NotFoundError } from "elysia";
 import { db } from "./db.ts";
 import { users } from "./schema.ts";
+import { eq } from "drizzle-orm";
+import { usersRoute } from "./routes/users-route.ts";
+type UserBody = {
+  name: string;
+  email: string;
+};
 
 const app = new Elysia();
 
 app
+  .use(usersRoute)
   .get("/", () => ({ status: "ok", uptime: process.uptime() }))
   .get("/health", () => ({ status: "healthy" }))
-  .get("/users", async () => {
-    return await db.select().from(users);
-  })
-  .get("/users/:id", async ({ params }) => {
-    const user = await db.select().from(users).where(users.id.equals(Number(params.id)));
+  .get("/users", async () => db.select().from(users))
+  .get("/users/:id", async ({ params }: { params: { id: string } }) => {
+    const user = await db.select().from(users).where(eq(users.id, Number(params.id)));
 
     if (!user.length) {
-      return app.error("User not found", { status: 404 });
+      throw new NotFoundError("User not found");
     }
 
     return user[0];
   })
-  .post("/users", async ({ body }) => {
-    const created = await db.insert(users).values({
-      name: body.name,
-      email: body.email
-    }).returning();
+  .put("/users/:id", async (context: any) => {
+    const body = context.body as UserBody;
+    const params = context.params as { id: string };
 
-    return created[0];
-  })
-  .put("/users/:id", async ({ params, body }) => {
-    const updated = await db.update(users)
+    await db.update(users)
       .set({
         name: body.name,
         email: body.email
       })
-      .where(users.id.equals(Number(params.id)))
-      .returning();
+      .where(eq(users.id, Number(params.id)));
 
-    if (!updated.length) {
-      return app.error("User not found", { status: 404 });
-    }
-
-    return updated[0];
+    return { success: true };
   })
-  .delete("/users/:id", async ({ params }) => {
-    const deleted = await db.delete(users)
-      .where(users.id.equals(Number(params.id)))
-      .returning();
-
-    if (!deleted.length) {
-      return app.error("User not found", { status: 404 });
-    }
-
+  .delete("/users/:id", async ({ params }: { params: { id: string } }) => {
+    await db.delete(users).where(eq(users.id, Number(params.id)));
     return { success: true };
   });
 

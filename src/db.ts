@@ -18,6 +18,7 @@ export async function initializeDatabase() {
       id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
       name VARCHAR(191) NOT NULL,
       email VARCHAR(191) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
