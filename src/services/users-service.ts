@@ -62,7 +62,7 @@ export class UserService {
 
   static async logoutUser(token: string) {
     if (!token) {
-      throw new Error("email sudah terdaftar");
+      throw new Error("Unauthorized");
     }
 
     const result = await db
@@ -71,7 +71,7 @@ export class UserService {
       .where(eq(users.token, token));
 
     if (result.length === 0) {
-      throw new Error("email sudah terdaftar");
+      throw new Error("Unauthorized");
     }
 
     await db
