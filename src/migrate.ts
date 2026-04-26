@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { initializeDatabase } from "./db.ts";
 
 await initializeDatabase();

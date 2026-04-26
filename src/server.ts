@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Elysia } from "elysia";
 import { db } from "./db.ts";
 import { users } from "./schema.ts";
@@ -56,5 +57,12 @@ app
 
 const port = Number(process.env.PORT) || 3000;
 
-app.listen(port);
-console.log(`Server running on http://localhost:${port}`);
+(async () => {
+  try {
+    await app.listen({ port });
+    console.log(`Server running on http://localhost:${port}`);
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+})();

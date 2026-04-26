@@ -1,7 +1,14 @@
+import "dotenv/config";
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 
-const mysqlUrl = process.env.MYSQL_URL ?? "mysql://root:password@127.0.0.1:3306/belajar_vibe_code";
+const mysqlUrl = process.env.MYSQL_URL;
+if (!mysqlUrl) {
+  throw new Error(
+    "Missing MYSQL_URL environment variable. Copy .env.example to .env and set the database connection string."
+  );
+}
+
 const pool = mysql.createPool(mysqlUrl);
 export const db = drizzle(pool);
 

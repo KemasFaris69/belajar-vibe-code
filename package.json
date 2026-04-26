@@ -9,6 +9,7 @@
     "migrate": "bun run src/migrate.ts"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "elysia": "^1.4.28",
     "drizzle-orm": "^0.45.2",
     "mysql2": "^3.4.0"
