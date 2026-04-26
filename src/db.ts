@@ -19,6 +19,7 @@ export async function initializeDatabase() {
       name VARCHAR(191) NOT NULL,
       email VARCHAR(191) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
+      token VARCHAR(255),
       created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
