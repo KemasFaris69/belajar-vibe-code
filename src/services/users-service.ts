@@ -1,6 +1,7 @@
 import { db } from "../db.ts";
 import { users } from "../schema.ts";
 import { eq } from "drizzle-orm";
+import { randomUUIDv7 } from "bun";
 
 export class UserService {
   static async registerUser(body: any) {
@@ -23,11 +24,39 @@ export class UserService {
       cost: 10,
     });
 
+    // Generate token
+    const token = randomUUIDv7();
+
     // Save user
     await db.insert(users).values({
       name,
       email,
       password: hashedPassword,
+      token,
     });
+
+    return { token };
+  }
+
+  static async getCurrentUser(token: string) {
+    if (!token) {
+      throw new Error("Unauthorized");
+    }
+
+    const result = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(eq(users.token, token));
+
+    if (result.length === 0) {
+      throw new Error("Unauthorized");
+    }
+
+    return result[0];
   }
 }
