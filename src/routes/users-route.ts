@@ -11,6 +11,12 @@ export const usersRoute = new Elysia()
       // return exactly { error: "email sudah terdaftar" } if that error was thrown
       return { error: e.message };
     }
+  }, {
+    detail: {
+      tags: ["Users"],
+      summary: "Registrasi user baru",
+      description: "Mendaftarkan user baru dengan name, email, dan password. Mengembalikan token sesi jika berhasil."
+    }
   })
   .get("/api/users/current", async ({ headers, set }: any) => {
     try {
@@ -23,6 +29,12 @@ export const usersRoute = new Elysia()
       set.status = 401;
       return { error: e.message };
     }
+  }, {
+    detail: {
+      tags: ["Users"],
+      summary: "Mendapatkan data user saat ini",
+      description: "Mendapatkan profil user yang sedang login menggunakan Bearer token."
+    }
   })
   .delete("/api/users/logout", async ({ headers, set }: any) => {
     try {
@@ -34,5 +46,11 @@ export const usersRoute = new Elysia()
     } catch (e: any) {
       set.status = 401;
       return { error: e.message };
+    }
+  }, {
+    detail: {
+      tags: ["Users"],
+      summary: "Logout user",
+      description: "Menghapus sesi user dengan menghapus token dari database."
     }
   });
