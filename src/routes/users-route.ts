@@ -32,7 +32,7 @@ export const usersRoute = new Elysia()
       await UserService.logoutUser(token);
       return { data: "OK" };
     } catch (e: any) {
-      set.status = 400;
+      set.status = 401;
       return { error: e.message };
     }
   });
