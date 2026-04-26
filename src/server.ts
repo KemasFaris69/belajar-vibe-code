@@ -9,7 +9,7 @@ type UserBody = {
   email: string;
 };
 
-const app = new Elysia();
+export const app = new Elysia();
 
 app
   .use(usersRoute)
@@ -45,12 +45,14 @@ app
 
 const port = Number(process.env.PORT) || 3000;
 
-(async () => {
-  try {
-    await app.listen({ port });
-    console.log(`Server running on http://localhost:${port}`);
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
-})();
+if (process.env.NODE_ENV !== 'test') {
+  (async () => {
+    try {
+      await app.listen({ port });
+      console.log(`Server running on http://localhost:${port}`);
+    } catch (error) {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    }
+  })();
+}
