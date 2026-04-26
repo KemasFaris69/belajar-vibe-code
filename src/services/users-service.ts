@@ -4,6 +4,11 @@ import { eq } from "drizzle-orm";
 import { randomUUIDv7 } from "bun";
 
 export class UserService {
+  /**
+   * Mendaftarkan user baru ke database.
+   * Melakukan validasi input, pengecekan email unik, hashing password, 
+   * dan pembuatan token sesi awal.
+   */
   static async registerUser(body: any) {
     const { name, email, password } = body;
 
@@ -38,6 +43,10 @@ export class UserService {
     return { token };
   }
 
+  /**
+   * Mengambil data profil user yang sedang login berdasarkan token.
+   * Mengembalikan detail user (id, name, email) jika token valid.
+   */
   static async getCurrentUser(token: string) {
     if (!token) {
       throw new Error("Unauthorized");
@@ -60,6 +69,10 @@ export class UserService {
     return result[0];
   }
 
+  /**
+   * Melakukan proses logout user.
+   * Menghapus token sesi dari database sehingga token tersebut tidak bisa digunakan lagi.
+   */
   static async logoutUser(token: string) {
     if (!token) {
       throw new Error("Unauthorized");
