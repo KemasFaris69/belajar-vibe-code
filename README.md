@@ -5,10 +5,13 @@ Backend starter project using Bun, Elysia, Drizzle ORM, and MySQL.
 ## Install
 
 1. Copy environment settings to `.env`:
+
    ```bash
    cp .env.example .env
    ```
+
 2. Install dependencies:
+
    ```bash
    bun install
    ```
