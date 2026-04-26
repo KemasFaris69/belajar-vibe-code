@@ -59,4 +59,26 @@ export class UserService {
 
     return result[0];
   }
+
+  static async logoutUser(token: string) {
+    if (!token) {
+      throw new Error("email sudah terdaftar");
+    }
+
+    const result = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.token, token));
+
+    if (result.length === 0) {
+      throw new Error("email sudah terdaftar");
+    }
+
+    await db
+      .update(users)
+      .set({ token: null })
+      .where(eq(users.token, token));
+
+    return true;
+  }
 }

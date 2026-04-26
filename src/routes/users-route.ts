@@ -23,4 +23,16 @@ export const usersRoute = new Elysia()
       set.status = 401;
       return { error: e.message };
     }
+  })
+  .delete("/api/users/logout", async ({ headers, set }: any) => {
+    try {
+      const authorization = headers["authorization"] || "";
+      const token = authorization.replace("Bearer ", "");
+
+      await UserService.logoutUser(token);
+      return { data: "OK" };
+    } catch (e: any) {
+      set.status = 400;
+      return { error: e.message };
+    }
   });
